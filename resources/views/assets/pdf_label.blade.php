@@ -1,102 +1,105 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <title>Cetak Label Aset</title>
     <style>
-        @page { margin: 0.2cm; }
-        body { font-family: 'Arial', sans-serif; }
+        body {
+            font-family: sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
+        /* Grid Container */
+        .label-container {
+            width: 100%;
+            /* Trik agar layout tidak berantakan */
+            font-size: 0; 
+        }
         
-        /* Grid Layout */
-        .container { width: 100%; }
+        /* Kotak Label Individual (2 Kolom per Baris) */
         .label-box {
-            width: 48%; 
-            float: left;
-            margin: 5px;
-            border: 3px solid #000;
-            border-radius: 12px;
-            padding: 8px;
-            height: 140px; 
+            display: inline-block;
+            width: 48%; /* Lebar 48% agar ada jarak 2% */
+            margin-right: 2%;
+            margin-bottom: 20px;
+            border: 2px solid #000;
+            border-radius: 8px;
+            padding: 10px;
             box-sizing: border-box;
-            page-break-inside: avoid; 
-            background: #fff;
-        }
-
-        table { width: 100%; border-collapse: collapse; }
-        td { vertical-align: middle; }
-        
-        /* QR Code Style */
-        .qr-cell { 
-            width: 35%; 
-            text-align: center; 
-            padding-right: 10px; 
-            border-right: 2px solid #000;
-        }
-
-        /* Text Vodeco Style */
-        .info-cell { width: 65%; padding-left: 10px; position: relative; }
-
-        .top-text {
-            font-size: 10px;
-            color: #000;
-            margin-bottom: 5px;
-            font-weight: normal;
-        }
-
-        /* PROPERTY OF VODECO */
-        .main-text { 
-            font-size: 18px; 
-            font-weight: 900; /* Paling Tebal */
-            text-transform: uppercase; 
-            line-height: 0.9;
-            margin-bottom: 5px;
-            color: #000;
-        }
-
-        .sub-text {
-            font-size: 9px;
-            font-weight: normal;
-        }
-
-        .asset-id { 
-            font-family: 'Courier New', monospace; 
-            font-weight: bold; 
+            vertical-align: top;
+            
+            /* Reset font size untuk konten */
             font-size: 12px; 
-            margin-top: 5px; 
+            page-break-inside: avoid; /* Jangan potong label di tengah halaman */
         }
-        
-        /* Logo V Kecil */
-        .logo-placeholder {
-            position: absolute; 
-            top: 0; 
-            right: 0;
-            width: 20px; 
-            height: 20px; 
-            border-left: 8px solid transparent;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+
+        /* Hapus margin kanan setiap label genap (2, 4, 6...) */
+        .label-box:nth-child(even) {
+            margin-right: 0;
+        }
+
+        .qr-code {
+            float: left;
+            width: 35%;
+        }
+        .qr-code img {
+            width: 100%;
+            height: auto;
+        }
+        .info {
+            float: right;
+            width: 62%;
+            padding-left: 3%;
+        }
+        .company-name {
+            font-weight: bold;
+            font-size: 14px;
+            text-transform: uppercase;
+            margin-bottom: 5px;
+            border-bottom: 2px solid #000;
+            display: inline-block;
+        }
+        .asset-tag {
+            font-family: monospace;
+            font-size: 16px;
+            font-weight: bold;
+            background-color: #000;
+            color: #fff;
+            padding: 2px 6px;
+            margin-top: 5px;
+            display: inline-block;
             border-radius: 4px;
+        }
+        .warning-text {
+            font-size: 8px;
+            color: #555;
+            margin-bottom: 4px;
         }
     </style>
 </head>
 <body>
-    <div class="container">
+
+    <div class="label-container">
         @foreach($assets as $asset)
-        <div class="label-box">
-            <table>
-                <tr>
-                    <td class="qr-cell">
-                        <img src="data:image/png;base64, {!! $asset->qr_code !!}" width="85">
-                        <div class="asset-id">{{ $asset->asset_tag }}</div>
-                    </td>
+            <div class="label-box">
+                <div class="qr-code">
+                    <img src="data:image/png;base64, {{ base64_encode(QrCode::format('png')->size(150)->generate($asset->asset_tag)) }} ">
+                </div>
+
+                <div class="info">
+                    <div class="warning-text">PROPERTY OF:</div>
+                    <div class="company-name">VODECO GROUP</div>
                     
-                    <td class="info-cell">
-                        <div class="logo-placeholder"></div>
-                        <div class="top-text">Unauthorized Use Is<br>Prohibited.</div>
-                        <div class="main-text">PROPERTY OF<br>VODECO</div>
-                        <div class="sub-text">&copy; All Rights Reserved</div>
-                    </td>
-                </tr>
-            </table>
-        </div>
+                    <div style="margin-top: 5px;">
+                        {{ Str::limit($asset->name, 35) }}
+                    </div>
+
+                    <div class="asset-tag">{{ $asset->asset_tag }}</div>
+                </div>
+                
+                <div style="clear: both;"></div>
+            </div>
         @endforeach
     </div>
+
 </body>
 </html>

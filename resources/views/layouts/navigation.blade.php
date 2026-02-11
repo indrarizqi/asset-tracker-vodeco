@@ -17,7 +17,7 @@
                     </x-nav-link>
 
                     <x-nav-link :href="route('assets.print')" :active="request()->routeIs('assets.print')">
-                        {{ __('Cetak QR Code') }}
+                        {{ __('Print QR Code') }}
                     </x-nav-link>
                 </div>
 

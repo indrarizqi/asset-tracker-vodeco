@@ -15,14 +15,12 @@
                     <a href="{{ route('assets.create') }}" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded shadow">
                         + Add New Asset
                     </a>
-                    <a href="{{ route('assets.pdf') }}" target="_blank" class="ml-2 bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded shadow">
-                        🖨️ Print All QR Code
-                    </a>
-                    @if(Auth::user()->role === 'super_admin')
+
+                        @if(Auth::user()->role === 'super_admin')
                         <a href="{{ route('report.assets') }}" target="_blank" class="ml-2 bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded shadow flex items-center gap-2">
-                            📄 Download Laporan PDF
+                            📄 Download PDF Report
                         </a>
-                    @endif
+                        @endif
                 </div>
             </div>
 
@@ -31,6 +29,7 @@
                     <table class="min-w-full border-collapse border border-gray-200">
                         <thead class="bg-gray-100">
                             <tr>
+                                <th class="border p-2 text-left">No</th>
                                 <th class="border p-2 text-left">Asset ID</th>
                                 <th class="border p-2 text-left">Asset Name</th>
                                 <th class="border p-2 text-left">Person In Charge & Info</th>
@@ -42,6 +41,9 @@
                         <tbody>
                             @forelse($assets as $asset)
                             <tr class="hover:bg-gray-50">
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 font-mono">
+                                    {{ $loop->iteration }}
+                                </td>
                                 <td class="border p-2 font-mono font-bold">{{ $asset->asset_tag }}</td>
                                 <td class="border p-2">
                                     <div class="font-bold">{{ $asset->name }}</div>

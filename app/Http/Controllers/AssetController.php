@@ -55,26 +55,37 @@ class AssetController extends Controller
     }
 
     // Preview & Cetak Label
-    public function printPreview()
+    public function printPreview() 
     {
-        $assets = Asset::latest()->get(); // Ambil semua aset
-        return view('assets.print_preview', compact('assets'));
+    $assets = Asset::orderBy('id', 'asc')->get(); // Urutan Data Terlama->Terbaru (Ascending)
+    
+    return view('assets.print_preview', compact('assets'));
     }
 
     public function downloadPdf(Request $request)
-    {
-        // Cek apakah ada ID yang dipilih dari checkbox?
-        if ($request->has('ids')) {
-            // Ambil HANYA aset yang ID-nya ada di list checkbox
-            $assets = Asset::whereIn('id', $request->ids)->get();
-        } else {
-            // Fallback: Ambil semua jika tidak ada filter (opsional)
-            $assets = Asset::all();
-        }
+{
+    // Logika: Jika ada data yang dicentang (selected_assets), ambil itu saja.
+    // Jika TIDAK ADA yang dicentang, berarti user klik "Cetak Semua" -> Ambil SEMUA data.
+    
+    if ($request->has('selected_assets')) {
+        // MODE 1: CETAK SELEKTIF (CHECKLIST)
+        $assets = Asset::whereIn('id', $request->selected_assets)
+                        ->orderBy('id', 'asc') // PENTING: Urutkan dari ID terkecil (1, 2, 3...)
+                        ->get();
+    } else {
+        // MODE 2: CETAK SEMUA (TOMBOL HITAM)
+        $assets = Asset::orderBy('id', 'asc')->get();
+    }
 
-        if ($assets->isEmpty()) {
-            return redirect()->back()->with('error', 'Tidak ada aset yang dipilih.');
-        }
+    // Load view PDF
+    $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('assets.pdf_label', compact('assets'));
+    
+    // Set ukuran kertas custom (contoh: ukuran label sticker) atau A4
+    $pdf->setPaper('a4', 'portrait');
+
+    // Stream (Preview dulu di browser, jangan langsung download)
+    return $pdf->stream('label-qr-code-vodeco.pdf');
+
         
         // Generate QR Code untuk setiap aset terpilih
         foreach ($assets as $asset) {
@@ -136,11 +147,9 @@ class AssetController extends Controller
     }
 
     public function index()
-    {
-    // Ambil data aset, urutkan dari yang terbaru
-    $assets = Asset::latest()->get();
+{
+    $assets = Asset::orderBy('id', 'asc')->get(); // Urutan Data Terlama->Terbaru (Ascending)
     
-    // Tampilkan view dashboard dengan membawa data assets
     return view('dashboard', compact('assets'));
-    }
+}
 }
