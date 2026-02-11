@@ -1,0 +1,48 @@
+<?php
+
+namespace Database\Seeders;
+
+use App\Models\Asset;
+use Illuminate\Database\Seeder;
+
+class AssetSeeder extends Seeder
+{
+    public function run(): void
+    {
+        Asset::create([
+            'asset_tag' => 'M-26-001',
+            'name' => 'Laptop Acer Aspire Go 14',
+            'person_in_charge' => null,
+            'purchase_date' => '2026-02-06',
+            'category' => 'Mobile',
+            'status' => 'available',
+        ]);
+
+        Asset::create([
+            'asset_tag' => 'M-26-002',
+            'name' => 'Laptop Dell Inspiron 1990',
+            'person_in_charge' => 'Bang Alam',
+            'purchase_date' => '2026-02-06',
+            'category' => 'Mobile',
+            'status' => 'maintenance',
+        ]);
+
+        Asset::create([
+            'asset_tag' => 'M-26-003',
+            'name' => 'Mouse Logitech B100',
+            'person_in_charge' => 'Bang Alam',
+            'purchase_date' => '2026-02-07',
+            'category' => 'Mobile',
+            'status' => 'in_use',
+        ]);
+
+        Asset::create([
+            'asset_tag' => 'SM-26-001',
+            'name' => 'Printer Epson L120',
+            'person_in_charge' => null,
+            'purchase_date' => '2026-02-09',
+            'category' => 'Semi-mobile',
+            'status' => 'available',
+        ]);
+    }
+}
