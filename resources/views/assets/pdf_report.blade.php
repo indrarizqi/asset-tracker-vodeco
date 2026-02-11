@@ -65,9 +65,9 @@
     </table>
 
     <div class="footer">
-        <p>Semarang, {{ date('d F Y') }}</p>
+        <p>Tegal, {{ date('d F Y') }}</p>
         <br><br><br>
-        <p><strong>( {{ Auth::user()->name }} )</strong><br>Super Admin</p>
+        <p><strong>( {{ Auth::user()->name }} )</strong><br>HR Vodeco</p>
     </div>
 
 </body>
