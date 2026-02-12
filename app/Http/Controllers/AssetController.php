@@ -70,7 +70,7 @@ class AssetController extends Controller
     if ($request->has('selected_assets')) {
         // MODE 1: CETAK SELEKTIF (CHECKLIST)
         $assets = Asset::whereIn('id', $request->selected_assets)
-                        ->orderBy('id', 'asc') // PENTING: Urutkan dari ID terkecil (1, 2, 3...)
+                        ->orderBy('id', 'asc')
                         ->get();
     } else {
         // MODE 2: CETAK SEMUA (TOMBOL HITAM)
@@ -84,7 +84,7 @@ class AssetController extends Controller
     $pdf->setPaper('a4', 'portrait');
 
     // Stream (Preview dulu di browser, jangan langsung download)
-    return $pdf->stream('label-qr-code-vodeco.pdf');
+    return $pdf->stream('Vodeco.pdf');
 
         
         // Generate QR Code untuk setiap aset terpilih

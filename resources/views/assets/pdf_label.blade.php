@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Cetak Label Aset</title>
+    <title>Assets Label</title>
     <style>
         @page {
             margin: 0.5cm;

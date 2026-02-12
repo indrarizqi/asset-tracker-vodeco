@@ -1,4 +1,5 @@
 <x-app-layout>
+    <x-slot name="title">Edit Asset</x-slot>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">Edit Aset: {{ $asset->asset_tag }}</h2>
     </x-slot>
@@ -20,6 +21,23 @@
                             <option value="mobile" {{ $asset->category == 'mobile' ? 'selected' : '' }}>Mobile Asset</option>
                             <option value="semi-mobile" {{ $asset->category == 'semi-mobile' ? 'selected' : '' }}>Semi-Mobile</option>
                             <option value="fixed" {{ $asset->category == 'fixed' ? 'selected' : '' }}>Fixed Asset</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="block text-sm font-bold text-gray-700 mb-2">Kondisi Fisik</label>
+                        <select name="condition" class="w-full border-gray-300 rounded-lg focus:ring-purple-500 focus:border-purple-500">
+                            <option value="Baik" {{ (isset($asset) && $asset->condition == 'Baik') ? 'selected' : '' }}>
+                                Baik
+                            </option>
+                            
+                            <option value="Rusak" {{ (isset($asset) && $asset->condition == 'Rusak') ? 'selected' : '' }}>
+                                Rusak
+                            </option>
+                            
+                            <option value="Rusak Total" {{ (isset($asset) && $asset->condition == 'Rusak Total') ? 'selected' : '' }}>
+                                Rusak Total
+                            </option>
                         </select>
                     </div>
 

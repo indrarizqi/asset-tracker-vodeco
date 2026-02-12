@@ -1,5 +1,5 @@
 <x-app-layout>
-    <x-slot name="title">New Asset</x-slot>
+    <x-slot name="title">Create Asset</x-slot>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
             {{ __('Tambah Aset Baru') }}
@@ -29,24 +29,26 @@
                             </select>
                         </div>
 
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                            <div>
-                                <label class="block text-gray-700 text-sm font-bold mb-2">Tanggal Pembelian / Masuk</label>
-                                <input type="date" name="purchase_date" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
-                            </div>
-
-                            <div>
-                                <label class="block text-gray-700 text-sm font-bold mb-2">Kondisi Awal</label>
-                                <select name="asset_condition" class="shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
-                                    <option value="Baik">Baik</option>
-                                    <option value="Rusak Ringan">Rusak Ringan</option>
-                                    <option value="Rusak Berat">Rusak Berat</option>
-                                </select>
-                            </div>
+                        <div class="mb-4">
+                            <label class="block text-sm font-bold text-gray-700 mb-2">Kondisi Fisik</label>
+                            <select name="condition" class="w-full border-gray-300 rounded-lg focus:ring-purple-500 focus:border-purple-500">
+                                <option value="Baik" {{ (isset($asset) && $asset->condition == 'Baik') ? 'selected' : '' }}>
+                                    Baik
+                                </option>
+                                
+                                <option value="Rusak" {{ (isset($asset) && $asset->condition == 'Rusak') ? 'selected' : '' }}>
+                                    Rusak
+                                </option>
+                                
+                                <option value="Rusak Total" {{ (isset($asset) && $asset->condition == 'Rusak Total') ? 'selected' : '' }}>
+                                    Rusak Total
+                                </option>
+                            </select>
                         </div>
 
                         <div class="mb-6">
                             <label class="block text-gray-700 text-sm font-bold mb-2">Penanggung Jawab</label>
+                            <p class="text-gray-500 text-sm">Kosongkan saja bila tidak ada PJ</p>
                             <input type="text" name="person_in_charge" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="GA Staff / Bang Alam">
                         </div>
 

@@ -55,8 +55,21 @@
                                 <td class="px-6 py-4">
                                     <div class="font-bold text-gray-900">{{ $asset->name }}</div>
                                     <div class="text-[11px] text-gray-500 mt-1">
-                                        Kondisi: <span class="font-medium {{ strtolower($asset->condition ?? 'Baik') == 'rusak' ? 'text-red-500' : 'text-green-600' }}">
-                                            {{ $asset->condition ?? 'Baik' }}
+                                        Kondisi: 
+                                        @php
+                                            $kondisi = $asset->condition ?? 'Baik';
+                                            $warnaKondisi = 'text-gray-700'; // Default
+                                            
+                                            if ($kondisi == 'Baik') {
+                                                $warnaKondisi = 'text-green-600';
+                                            } elseif ($kondisi == 'Rusak') {
+                                                $warnaKondisi = 'text-yellow-600'; 
+                                            } elseif ($kondisi == 'Rusak Total') {
+                                                $warnaKondisi = 'text-red-600 font-bold'; 
+                                            }
+                                        @endphp
+                                        <span class="font-medium {{ $warnaKondisi }}">
+                                            {{ $kondisi }}
                                         </span>
                                     </div>
                                 </td>
@@ -89,6 +102,8 @@
                                             $colorClass = 'bg-blue-100 text-blue-700';
                                         } elseif (str_contains($statusKey, 'maintenance')) {
                                             $colorClass = 'bg-yellow-100 text-yellow-700';
+                                        } elseif (str_contains($statusKey, 'unrepairable')) { 
+                                            $colorClass = 'bg-red-100 text-red-700';
                                         }
                                     @endphp
                                     
