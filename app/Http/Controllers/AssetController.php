@@ -56,51 +56,6 @@ class AssetController extends Controller
         return redirect()->route('dashboard')->with('success', 'Aset berhasil ditambah: ' . $newTag . ' (' . ucfirst($status) . ')');
     }
 
-    // Preview & Cetak Label
-    public function printPreview() 
-    {
-    $assets = Asset::orderBy('id', 'asc')->get(); // Urutan Data Terlama->Terbaru (Ascending)
-    
-    return view('assets.print_preview', compact('assets'));
-    }
-
-    public function downloadPdf(Request $request)
-{
-    // Logika: Jika ada data yang dicentang (selected_assets), ambil itu saja.
-    // Jika TIDAK ADA yang dicentang, berarti user klik "Cetak Semua" -> Ambil SEMUA data.
-    
-    if ($request->has('selected_assets')) {
-        // MODE 1: CETAK SELEKTIF (CHECKLIST)
-        $assets = Asset::whereIn('id', $request->selected_assets)
-                        ->orderBy('id', 'asc')
-                        ->get();
-    } else {
-        // MODE 2: CETAK SEMUA (TOMBOL HITAM)
-        $assets = Asset::orderBy('id', 'asc')->get();
-    }
-
-    // Load view PDF
-    $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('assets.pdf_label', compact('assets'));
-    
-    // Set ukuran kertas custom (contoh: ukuran label sticker) atau A4
-    $pdf->setPaper('a4', 'portrait');
-
-    // Stream (Preview dulu di browser, jangan langsung download)
-    return $pdf->stream('Vodeco.pdf');
-
-        
-        // Generate QR Code untuk setiap aset terpilih
-        foreach ($assets as $asset) {
-            // Kita gunakan library simple-qrcode
-            $asset->qr_code = base64_encode(QrCode::format('png')->size(100)->generate($asset->asset_tag));
-        }
-
-        $pdf = Pdf::loadView('assets.pdf_label', compact('assets'));
-        
-        // Tips: Gunakan 'stream' agar bisa preview dulu di browser, bukan langsung 'download'
-        return $pdf->stream('labels-vodeco-selected.pdf');
-    }
-
     public function edit($id)
     {
         $asset = Asset::findOrFail($id);
@@ -150,10 +105,97 @@ class AssetController extends Controller
         return $pdf->stream('Vodeco.pdf');
     }
 
-    public function index()
-{
-    $assets = Asset::orderBy('id', 'asc')->get(); // Urutan Data Terlama->Terbaru (Ascending)
-    
-    return view('dashboard', compact('assets'));
-}
+    // Preview & Cetak Label
+    public function printPreview(Request $request)
+    {
+        // 1. Ambil kata kunci pencarian dari URL
+        $search = $request->input('search');
+
+        // 2. Query Data dengan Pagination
+        $assets = Asset::query()
+            ->when($search, function ($query, $search) {
+                return $query->where('name', 'like', "%{$search}%")
+                            ->orWhere('asset_tag', 'like', "%{$search}%")
+                            ->orWhere('category', 'like', "%{$search}%");
+            })
+            ->latest()      
+            ->paginate(10)  // Max Paginate 10
+            ->withQueryString(); 
+
+        // 3. Kirim ke View 'assets.print'
+        return view('assets.print_preview', compact('assets'));
+    }
+
+    //
+    public function downloadPdf(Request $request)
+    {
+        $selectedIds = $request->input('selected_assets');
+        
+        if ($request->has('selected_assets')) {
+            // MODE 1: CETAK SELEKTIF (CHECKLIST)
+            $assets = Asset::whereIn('id', $request->selected_assets)
+                            ->orderBy('id', 'asc')
+                            ->get();
+        } else {
+            // MODE 2: CETAK SEMUA (TOMBOL HITAM)
+            $assets = Asset::orderBy('id', 'asc')->get();
+        }
+
+        // Load view PDF
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('assets.pdf_label', compact('assets'));
+        
+        // Set ukuran kertas custom (contoh: ukuran label sticker) atau A4
+        $pdf->setPaper('a4', 'portrait');
+
+        // Stream (Preview dulu di browser, jangan langsung download)
+        return $pdf->stream('Vodeco.pdf');
+
+        // Generate QR Code untuk setiap aset terpilih
+        foreach ($assets as $asset) {
+            // Kita gunakan library simple-qrcode
+            $asset->qr_code = base64_encode(QrCode::format('png')->size(100)->generate($asset->asset_tag));
+        }
+
+        $pdf = Pdf::loadView('assets.pdf_label', compact('assets'));
+        
+        // Tips: Gunakan 'stream' agar bisa preview dulu di browser, bukan langsung 'download'
+        return $pdf->stream('labels-vodeco-selected.pdf');
+    }
+
+    // 1. DASHBOARD: Pagination + Search
+    public function index(Request $request)
+    {
+        $search = $request->input('search');
+
+        $assets = Asset::query()
+            ->when($search, function ($query, $search) {
+                return $query->where('name', 'like', "%{$search}%")
+                            ->orWhere('asset_tag', 'like', "%{$search}%")
+                            ->orWhere('category', 'like', "%{$search}%")
+                            ->orWhere('status', 'like', "%{$search}%");
+            })
+            ->latest()
+            ->paginate(10)
+            ->withQueryString(); 
+
+        return view('dashboard', compact('assets'));
+    }
+
+    // Method untuk Halaman Menu "Print QR Code"
+    public function print_selection(Request $request)
+    {
+        $search = $request->input('search');
+
+        $assets = Asset::query()
+            ->when($search, function ($query, $search) {
+                return $query->where('name', 'like', "%{$search}%")
+                            ->orWhere('asset_tag', 'like', "%{$search}%")
+                            ->orWhere('category', 'like', "%{$search}%");
+            })
+            ->latest()
+            ->paginate(10) // Max Paginate 10
+            ->withQueryString();
+
+        return view('assets.print', compact('assets'));
+    }
 }

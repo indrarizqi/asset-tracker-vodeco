@@ -24,7 +24,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/assets/{id}/edit', [AssetController::class, 'edit'])->name('assets.edit');
     Route::put('/assets/{id}', [AssetController::class, 'update'])->name('assets.update');
 
-    // Area Khusus Super Admin
+    // Khusus Super Admin
     Route::middleware(['role:super_admin'])->group(function () {
         Route::delete('/assets/{id}', [AssetController::class, 'destroy'])->name('assets.destroy');
         Route::resource('users', UserController::class);

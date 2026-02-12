@@ -1,5 +1,4 @@
 <x-app-layout>
-    <x-slot name="title">Print QR Code</x-slot>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
             {{ __('Print QR Code Labels') }}
@@ -8,38 +7,80 @@
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-
-            @if(session('success'))
-                <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
-                    {{ session('success') }}
-                </div>
-            @endif
-
+            
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6">
 
-                <div class="mb-6 border-b pb-4">
-                    <h3 class="text-lg font-bold text-gray-800">Pilih Aset untuk Dicetak</h3>
-                    <p class="text-gray-500 text-sm">Gunakan kolom pencarian untuk menyaring data, lalu centang aset
-                        yang ingin Anda cetak labelnya</p>
+                <div class="flex flex-col sm:flex-row justify-between items-center gap-4 mb-6 pb-6 border-b border-gray-100">
+                    
+                    <div class="w-full sm:w-1/3 relative">
+                        <form method="GET" action="{{ route('assets.print') }}">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                            </div>
+                            <input type="text" name="search" value="{{ request('search') }}" 
+                                class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-purple-500 focus:border-purple-500 sm:text-sm transition duration-150 ease-in-out" 
+                                placeholder="Cari ID, Nama, atau Kategori...">
+                        </form>
+                    </div>
+
+                    <div class="flex items-center gap-3 w-full sm:w-auto justify-end">
+                        
+                        <span id="selected-count" class="text-xs font-bold text-purple-700 bg-purple-50 px-3 py-2 rounded-md hidden transition-all">
+                            0 Selected
+                        </span>
+
+                        <button type="button" id="btn-select-all" class="inline-flex items-center px-4 py-2 bg-gray-100 border border-transparent rounded-md font-semibold text-xs text-gray-700 uppercase tracking-widest hover:bg-gray-200 active:bg-gray-300 focus:outline-none focus:border-gray-300 focus:ring ring-gray-300 disabled:opacity-25 transition ease-in-out duration-150">
+                            Select All
+                        </button>
+
+                        <button type="button" id="btn-print" onclick="printSelected()" disabled 
+                            class="inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:ring ring-gray-300 disabled:opacity-50 disabled:cursor-not-allowed transition ease-in-out duration-150">
+                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
+                            Print
+                        </button>
+                    </div>
                 </div>
 
-                <form action="{{ route('assets.pdf') }}" method="GET" target="_blank" id="printForm">
+                <div class="overflow-x-auto">
+                    <table class="min-w-full text-left">
+                        <thead>
+                            <tr class="text-gray-500 text-[11px] font-bold uppercase tracking-wider border-b border-gray-200">
+                                <th class="px-4 py-3 pb-4">Asset ID</th>
+                                <th class="px-4 py-3 pb-4">Asset Name</th>
+                                <th class="px-4 py-3 pb-4">Person In Charge & Info</th>
+                                <th class="px-4 py-3 pb-4 text-center">Category</th>
+                                <th class="px-4 py-3 pb-4 text-center">Status</th>
+                                <th class="px-4 py-3 pb-4 text-center w-24">Options</th> </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-100">
+                            @foreach($assets as $asset)
+                            <tr class="hover:bg-gray-50 transition-colors duration-200">
+                                
+                                <td class="px-4 py-4 whitespace-nowrap">
+                                    <span class="font-bold text-gray-800 text-sm bg-gray-50 px-2 py-1 rounded border border-gray-200">
+                                        {{ $asset->asset_tag }}
+                                    </span>
+                                </td>
 
-                    <div class="mb-4 flex flex-col sm:flex-row justify-between items-center gap-4">
+                                <td class="px-4 py-4">
+                                    <div class="font-bold text-gray-900 text-sm">{{ $asset->name }}</div>
+                                    <div class="text-xs text-gray-400 mt-0.5 font-medium">Kondisi: {{ $asset->condition ?? 'Baik' }}</div>
+                                </td>
 
-                        <div class="relative w-full sm:w-1/3">
-                            <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                                <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor"
-                                    viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-                                </svg>
-                            </div>
-                            <input type="text" id="searchInput"
-                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-gray-800 focus:border-gray-800 block w-full pl-10 py-2.5"
-                                placeholder="Cari ID, Nama, atau Kategori...">
-                        </div>
+                                <td class="px-4 py-4">
+                                    <div class="flex items-center">
+                                        <div class="ml-0">
+                                            <div class="text-sm font-medium text-gray-900">
+                                                {{ $asset->person_in_charge ?? '-' }}
+                                            </div>
+                                            <div class="text-xs text-gray-400">
+                                                {{ $asset->purchase_date ? \Carbon\Carbon::parse($asset->purchase_date)->format('Y-m-d') : '' }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
 
+<<<<<<< Updated upstream
                         <div class="flex gap-2 w-full sm:w-auto sm:justify-end">
                             <button type="button" id="selectAllBtn" onclick="toggleSelectAll()"
                                 class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded transition w-32 text-center cursor-pointer">
@@ -57,166 +98,126 @@
                             </button>
                         </div>
                     </div>
+=======
+                                <td class="px-4 py-4 text-center whitespace-nowrap">
+                                    @if(strtolower($asset->category) == 'fixed')
+                                        <span class="px-3 py-1 inline-flex text-[10px] leading-5 font-bold rounded-full bg-indigo-100 text-indigo-700 uppercase">
+                                            FIXED
+                                        </span>
+                                    @else
+                                        <span class="px-3 py-1 inline-flex text-[10px] leading-5 font-bold rounded-full bg-purple-100 text-purple-700 uppercase">
+                                            MOBILE
+                                        </span>
+                                    @endif
+                                </td>
 
-                    <div class="overflow-x-auto border rounded-lg shadow-sm">
-                        <table class="min-w-full divide-y divide-gray-200">
-                            <thead class="bg-gray-50">
-                                <tr>
-                                    <th
-                                        class="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">
-                                        Asset ID</th>
-                                    <th
-                                        class="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">
-                                        Asset Name</th>
-                                    <th
-                                        class="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">
-                                        Person in Charge & Info</th>
-                                    <th
-                                        class="px-6 py-3 text-center text-xs font-bold text-gray-500 uppercase tracking-wider">
-                                        Asset Category</th>
-                                    <th
-                                        class="px-6 py-3 text-center text-xs font-bold text-gray-500 uppercase tracking-wider">
-                                        Status</th>
-                                    <th
-                                        class="px-6 py-3 text-center text-xs font-bold text-gray-500 uppercase tracking-wider border-l border-gray-200 w-24">
-                                        Options</th>
-                                </tr>
-                            </thead>
-                            <tbody class="bg-white divide-y divide-gray-200" id="assetTableBody">
-                                @foreach($assets as $asset)
-                                    <tr class="hover:bg-gray-50 transition-colors asset-row cursor-pointer"
-                                        onclick="toggleRowCheckbox(event, this)">
-                                        <td class="px-6 py-4 whitespace-nowrap">
-                                            <span
-                                                class="font-mono font-bold text-gray-900 asset-id">{{ $asset->asset_tag }}</span>
-                                        </td>
-                                        <td class="px-6 py-4 whitespace-nowrap font-bold text-gray-900 asset-name">
-                                            {{ $asset->name }}</td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
-                                            {{ $asset->person_in_charge ?? '-' }}
-                                            <div class="text-xs text-gray-400">{{ $asset->purchase_date }}</div>
-                                        </td>
-                                        <td
-                                            class="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-600 asset-category">
-                                            {{ ucfirst($asset->category) }}
-                                        </td>
-                                        <td class="px-6 py-4 text-center whitespace-nowrap">
-                                            @php
-                                                $statusKey = strtolower(str_replace(' ', '_', $asset->status));
-                                                $colorClass = 'bg-gray-100 text-gray-700';
+                                <td class="px-4 py-4 text-center whitespace-nowrap">
+                                    @php
+                                        $statusKey = strtolower(str_replace(' ', '_', $asset->status));
+                                        $statusClass = 'bg-gray-100 text-gray-600 border border-gray-200'; // Default
+                                        
+                                        if (str_contains($statusKey, 'available')) {
+                                            $statusClass = 'bg-green-50 text-green-600 border border-green-200';
+                                        } elseif (str_contains($statusKey, 'maintenance')) {
+                                            $statusClass = 'bg-yellow-50 text-yellow-600 border border-yellow-200';
+                                        } elseif (str_contains($statusKey, 'use')) {
+                                            $statusClass = 'bg-blue-50 text-blue-600 border border-blue-200';
+                                        }
+                                    @endphp
+                                    <span class="px-3 py-1 inline-flex text-[10px] leading-5 font-bold rounded-full uppercase {{ $statusClass }}">
+                                        {{ str_replace('_', ' ', $asset->status) }}
+                                    </span>
+                                </td>
+>>>>>>> Stashed changes
 
-                                                if (str_contains($statusKey, 'broken')) {
-                                                    $colorClass = 'bg-red-100 text-red-700';
-                                                } elseif (str_contains($statusKey, 'use')) {
-                                                    $colorClass = 'bg-blue-100 text-blue-700';
-                                                } elseif (str_contains($statusKey, 'maintenance')) {
-                                                    $colorClass = 'bg-yellow-100 text-yellow-700';
-                                                }
-                                            @endphp
-                                            <span
-                                                class="text-xs {{ $colorClass }} px-2 py-1 rounded border">{{ ucfirst($asset->status) }}</span>
-                                        </td>
-                                        <td class="px-6 py-4 text-center border-l border-gray-100">
-                                            <input type="checkbox" name="selected_assets[]" value="{{ $asset->id }}"
-                                                class="asset-checkbox w-5 h-5 text-gray-800 rounded border-gray-400 focus:ring-gray-800 cursor-pointer transition">
-                                        </td>
-                                    </tr>
-                                @endforeach
+                                <td class="px-4 py-4 text-center whitespace-nowrap">
+                                    <input type="checkbox" value="{{ $asset->id }}" 
+                                        class="asset-checkbox w-5 h-5 rounded border-gray-300 text-gray-800 shadow-sm focus:border-gray-300 focus:ring focus:ring-gray-200 focus:ring-opacity-50 cursor-pointer transition-transform hover:scale-110">
+                                </td>
+
+                            </tr>
+                            @endforeach
                             </tbody>
                         </table>
-
-                        <div id="noResultMessage" class="hidden text-center py-8 text-gray-500 font-medium">
-                            Aset tidak ditemukan.
-                        </div>
-                    </div>
-                </form>
+                    </div> </div> <div class="mt-8 flex justify-center">
+                    {{ $assets->links('pagination.custom') }}
+                </div>
 
             </div>
         </div>
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('DOMContentLoaded', function() {
+            let selectedAssets = JSON.parse(localStorage.getItem('selectedAssets')) || [];
             const checkboxes = document.querySelectorAll('.asset-checkbox');
-            const printBtn = document.getElementById('printSelectedBtn');
-            const selectAllBtn = document.getElementById('selectAllBtn');
-            const searchInput = document.getElementById('searchInput');
-            const rows = document.querySelectorAll('.asset-row');
-            const noResultMessage = document.getElementById('noResultMessage');
+            const btnPrint = document.getElementById('btn-print');
+            const btnSelectAll = document.getElementById('btn-select-all');
+            const countDisplay = document.getElementById('selected-count');
 
-            // 1. Fungsi Update Status Tombol Print & Teks "Select All"
-            function updateBtnState() {
-                const anyChecked = Array.from(checkboxes).some(c => c.checked);
-                printBtn.disabled = !anyChecked;
+            updateUI();
 
-                // Cek apakah semua checkbox YANG TERLIHAT sudah dicentang
-                const visibleCheckboxes = Array.from(checkboxes).filter(cb => cb.closest('tr').style.display !== 'none');
-                const allVisibleChecked = visibleCheckboxes.every(c => c.checked) && visibleCheckboxes.length > 0;
+            checkboxes.forEach(cb => {
+                if (selectedAssets.includes(cb.value)) cb.checked = true;
 
-                // Ubah teks tombol secara otomatis
-                if (allVisibleChecked && visibleCheckboxes.length > 0) {
-                    selectAllBtn.textContent = 'Deselect All';
+                cb.addEventListener('change', function() {
+                    if (this.checked) {
+                        if (!selectedAssets.includes(this.value)) selectedAssets.push(this.value);
+                    } else {
+                        selectedAssets = selectedAssets.filter(id => id !== this.value);
+                    }
+                    saveAndRefresh();
+                });
+            });
+
+            btnSelectAll.addEventListener('click', function() {
+                const allChecked = Array.from(checkboxes).every(cb => cb.checked);
+                
+                if (allChecked) {
+                    checkboxes.forEach(cb => {
+                        cb.checked = false;
+                        selectedAssets = selectedAssets.filter(id => id !== cb.value);
+                    });
                 } else {
-                    selectAllBtn.textContent = 'Select All';
+                    checkboxes.forEach(cb => {
+                        if (!cb.checked) {
+                            cb.checked = true;
+                            if (!selectedAssets.includes(cb.value)) selectedAssets.push(cb.value);
+                        }
+                    });
                 }
+                saveAndRefresh();
+            });
+
+            function saveAndRefresh() {
+                localStorage.setItem('selectedAssets', JSON.stringify(selectedAssets));
+                updateUI();
             }
 
-            // Pasang event listener ke setiap checkbox
-            checkboxes.forEach(cb => {
-                cb.addEventListener('change', updateBtnState);
-            });
-
-            // 2. Fungsi Select All (Tanpa Master Checkbox)
-            window.toggleSelectAll = function () {
-                const visibleCheckboxes = Array.from(checkboxes).filter(cb => cb.closest('tr').style.display !== 'none');
-                const allVisibleChecked = visibleCheckboxes.every(c => c.checked) && visibleCheckboxes.length > 0;
-
-                // Jika semuanya sudah dicentang, maka lepas semua. Jika belum, centang semua.
-                const targetState = !allVisibleChecked;
-
-                visibleCheckboxes.forEach((cb) => {
-                    cb.checked = targetState;
-                });
-
-                updateBtnState();
-            };
-
-            // 3. (Opsional/Bonus) Fungsi agar user bisa klik sembarang di baris tabel untuk mencentang
-            window.toggleRowCheckbox = function (event, rowElement) {
-                // Cegah klik ganda jika user memang mengeklik kotak checkbox-nya langsung
-                if (event.target.type !== 'checkbox') {
-                    const checkbox = rowElement.querySelector('.asset-checkbox');
-                    checkbox.checked = !checkbox.checked;
-                    updateBtnState();
+            function updateUI() {
+                if (selectedAssets.length > 0) {
+                    countDisplay.innerText = selectedAssets.length + ' Selected';
+                    countDisplay.classList.remove('hidden');
+                    btnPrint.disabled = false;
+                    btnPrint.classList.remove('opacity-50', 'cursor-not-allowed');
+                } else {
+                    countDisplay.classList.add('hidden');
+                    btnPrint.disabled = true;
+                    btnPrint.classList.add('opacity-50', 'cursor-not-allowed');
                 }
+
+                // Update Text Tombol Select All
+                const allCheckedNow = checkboxes.length > 0 && Array.from(checkboxes).every(cb => cb.checked);
+                btnSelectAll.textContent = allCheckedNow ? "Deselect All" : "Select All";
+            }
+
+            window.printSelected = function() {
+                if (selectedAssets.length === 0) return;
+                let url = "{{ route('assets.pdf') }}"; 
+                const params = new URLSearchParams();
+                selectedAssets.forEach(id => params.append('selected_assets[]', id));
+                window.open(url + '?' + params.toString(), '_blank');
             };
-
-            // 4. Fitur Live Search
-            searchInput.addEventListener('input', function () {
-                const filter = this.value.toLowerCase();
-                let visibleCount = 0;
-
-                rows.forEach(row => {
-                    const idText = row.querySelector('.asset-id').textContent.toLowerCase();
-                    const nameText = row.querySelector('.asset-name').textContent.toLowerCase();
-                    const categoryText = row.querySelector('.asset-category').textContent.toLowerCase();
-                    const checkbox = row.querySelector('.asset-checkbox');
-
-                    if (idText.includes(filter) || nameText.includes(filter) || categoryText.includes(filter)) {
-                        row.style.display = '';
-                        visibleCount++;
-                    } else {
-                        row.style.display = 'none';
-                        checkbox.checked = false;
-                    }
-                });
-
-                noResultMessage.classList.toggle('hidden', visibleCount > 0);
-                updateBtnState();
-            });
-
-            // Inisialisasi awal
-            updateBtnState();
         });
     </script>
 </x-app-layout>
