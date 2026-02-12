@@ -94,23 +94,23 @@
         </thead>
         <tbody>
             @foreach($assets as $index => $asset)
-                    <tr>
-                        <td style="text-align: center;">{{ $index + 1 }}</td>
-                        <td style="font-family: monospace;">{{ $asset->asset_tag }}</td>
-                        <td>{{ $asset->name }}</td>
-                        <td>{{ ucfirst($asset->category) }}</td>
-                        <td>
-                            {{ $asset->person_in_charge ?? '-' }}
-                            <br><small style="color: #666;">Beli: {{ $asset->purchase_date }}</small>
-                        </td>
-                        <td class="{{ $asset->condition == 'Baik' ? 'status-used' : ($asset->condition == 'Rusak-ringan' ? 'status-maintenance' : 'status-broken') }}">{{ $asset->condition ?? '-' }}</td>
-                        <td class="
+            <tr>
+                <td style="text-align: center;">{{ $index + 1 }}</td>
+                <td style="font-family: monospace;">{{ $asset->asset_tag }}</td>
+                <td>{{ $asset->name }}</td>
+                <td>{{ ucfirst($asset->category) }}</td>
+                <td>
+                    {{ $asset->person_in_charge ?? '-' }}
+                    <br><small style="color: #666;">Beli: {{ $asset->purchase_date }}</small>
+                </td>
+                <td class="{{ $asset->condition == 'Baik' ? 'status-used' : ($asset->condition == 'Rusak Ringan' ? 'status-maintenance' : 'status-broken') }}">{{ $asset->condition ?? '-' }}</td>
+                <td class="
                                     {{ $asset->status == 'maintenance' ? 'status-maintenance' :
                 ($asset->status == 'in_use' ? 'status-used' : 'status-broken') }}">
-                            {{ ucfirst(str_replace('_', ' ', $asset->status)) }}
-                        </td>
-                        <td>{{ $asset->description ?? '-' }}</td>
-                    </tr>
+                    {{ ucfirst(str_replace('_', ' ', $asset->status)) }}
+                </td>
+                <td>{{ $asset->description ?? '-' }}</td>
+            </tr>
             @endforeach
         </tbody>
     </table>
