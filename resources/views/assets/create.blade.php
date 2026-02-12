@@ -16,13 +16,13 @@
                         
                         <div class="mb-4">
                             <label class="block text-gray-700 text-sm font-bold mb-2">Nama Aset</label>
-                            <input type="text" name="name" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Laptop Dell Latitude 7490" required>
+                            <input type="text" name="name" class="shadow appearance-none border rounded w-full py-2 px-3 border-gray-300 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Laptop Dell Latitude 7490" required>
                         </div>
 
                         <div class="mb-4">
                             <label class="block text-gray-700 text-sm font-bold mb-2">Kategori Aset</label>
-                            <select name="category" class="shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
-                                <option value="" disabled selected></option>
+                            <select name="category" class="shadow border rounded w-full py-2 px-3 border-gray-300 text-gray-700 leading-tight focus:outline-none focus:shadow-outline cursor-pointer" required>
+                                <option value="" disabled selected>Pilih Kategori Aset</option>
                                 <option value="mobile">Mobile Asset (Laptop, Tablet, Tools)</option>
                                 <option value="semi-mobile">Semi-Mobile (PC, Printer, Router)</option>
                                 <option value="fixed">Fixed Asset (AC, CCTV, Meja)</option>
@@ -32,12 +32,12 @@
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                             <div>
                                 <label class="block text-gray-700 text-sm font-bold mb-2">Tanggal Pembelian / Masuk</label>
-                                <input type="date" name="purchase_date" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+                                <input type="date" name="purchase_date" class="shadow appearance-none border rounded w-full py-2 px-3 border-gray-300 text-gray-700 leading-tight focus:outline-none focus:shadow-outline cursor-pointer" required>
                             </div>
 
                             <div>
                                 <label class="block text-gray-700 text-sm font-bold mb-2">Kondisi Awal</label>
-                                <select name="condition" class="shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+                                <select name="condition" class="shadow border rounded w-full py-2 px-3 border-gray-300 text-gray-700 leading-tight focus:outline-none focus:shadow-outline cursor-pointer" required>
                                     <option value="Baik">Baik</option>
                                     <option value="Rusak Ringan">Rusak Ringan</option>
                                     <option value="Rusak Berat">Rusak Berat</option>
@@ -47,16 +47,16 @@
 
                         <div class="mb-6">
                             <label class="block text-gray-700 text-sm font-bold mb-2">Penanggung Jawab</label>
-                            <input type="text" name="person_in_charge" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Kosongkan jika tidak ada">
+                            <input type="text" name="person_in_charge" class="shadow appearance-none border rounded w-full py-2 px-3 border-gray-300 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Kosongkan jika tidak ada">
                         </div>
 
                         <div class="mb-6">
                             <label class="block text-gray-700 text-sm font-bold mb-2">Keterangan</label>
-                            <textarea required name="description" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Keterangan"></textarea>
+                            <textarea required name="description" class="shadow appearance-none border rounded w-full py-2 px-3 border-gray-300 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Keterangan"></textarea>
                         </div>
 
                         <div class="flex items-center justify-between mt-6">
-                            <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                            <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline cursor-pointer">
                                 Simpan
                             </button>
                             <a href="{{ route('dashboard') }}" class="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800">
