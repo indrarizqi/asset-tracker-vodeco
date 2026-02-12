@@ -26,7 +26,7 @@ class AssetSeeder extends Seeder
             'purchase_date' => '2026-02-06',
             'category' => 'Mobile',
             'status' => 'maintenance',
-            'condition' => 'Rusak',
+            'condition' => 'Rusak Berat',
         ]);
 
         Asset::create([

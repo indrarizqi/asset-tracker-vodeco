@@ -34,6 +34,7 @@ class AssetController extends Controller
                         ->orderBy('id', 'desc')->first();       
         $sequence = $lastAsset ? intval(substr($lastAsset->asset_tag, -3)) + 1 : 1;
         $newTag = sprintf("%s-%s-%03d", $prefix, $year, $sequence);
+        
 
         // Jika PJ diisi -> Status 'in_use'. Jika kosong -> 'available'
         $status = $request->filled('person_in_charge') ? 'in_use' : 'available';
@@ -46,7 +47,7 @@ class AssetController extends Controller
             
             // Data Tambahan
             'purchase_date' => $request->purchase_date,
-            'asset_condition' => $request->asset_condition,
+            'condition' => $request->condition,
             'person_in_charge' => $request->person_in_charge,
             
         ]);

@@ -3,7 +3,7 @@
     <x-auth-session-status class="mb-4" :status="session('status')" />
 
     <div class="text-center mb-8 mt-2">
-        <h2 class="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+        <h2 class="text-2xl font-bold bg-linear-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
             Asset Tracker Vodeco
         </h2>
         <p class="text-[13px] text-gray-500 mt-2">
@@ -31,7 +31,7 @@
         </div>
 
         <button type="submit" 
-            class="w-full py-3 px-4 rounded-lg text-white font-bold text-sm tracking-wide bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 focus:ring-4 focus:ring-purple-300 transition-all shadow-md">
+            class="w-full py-3 px-4 rounded-lg text-white font-bold text-sm tracking-wide bg-linear-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 focus:ring-4 focus:ring-purple-300 transition-all shadow-md">
             Sign In
         </button>
     </form>
