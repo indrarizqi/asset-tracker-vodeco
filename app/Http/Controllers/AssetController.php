@@ -53,7 +53,7 @@ class AssetController extends Controller
             'description' => $request->description,
         ]);
 
-        return redirect()->route('dashboard')->with('success', 'Aset berhasil ditambah: ' . $newTag . ' (' . ucfirst($status) . ')');
+        return redirect()->route('dashboard')->with('success', 'Aset Berhasil Ditambah : ' . $newTag . ' (' . ucfirst($status) . ')');
     }
 
     public function edit($id)
@@ -78,7 +78,7 @@ class AssetController extends Controller
             'description' => $request->description
         ]);
 
-        return redirect()->route('dashboard')->with('success', 'Data aset berhasil diperbarui!');
+        return redirect()->route('dashboard')->with('success', 'Data Aset Berhasil Diperbarui!');
     }
 
     // Hapus Aset (Untuk Super Admin)
@@ -86,7 +86,7 @@ class AssetController extends Controller
     {
         $asset = Asset::findOrFail($id);
         $asset->delete();
-        return redirect()->route('dashboard')->with('success', 'Aset berhasil dihapus.');
+        return redirect()->route('dashboard')->with('success', 'Aset Berhasil Dihapus.');
     }
 
     // Export Laporan Aset (Untuk Super Admin)

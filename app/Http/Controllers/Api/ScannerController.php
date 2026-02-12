@@ -21,7 +21,7 @@ class ScannerController extends Controller
 
         // --- VALIDASI ROLE BARU (HANYA ADMIN) ---
         if ($user->role !== 'admin') {
-            return response()->json(['message' => 'Akses ditolak! Hanya Admin (Staff) yang boleh scan.'], 403);
+            return response()->json(['message' => 'Maaf, Selain Admin Tidak Boleh Masuk!'], 403);
         }
         // ----------------------------------------
 
@@ -43,7 +43,7 @@ class ScannerController extends Controller
         $asset = Asset::where('asset_tag', $tag)->first();
 
         if (!$asset) {
-            return response()->json(['success' => false, 'message' => 'Aset tidak ditemukan!'], 404);
+            return response()->json(['success' => false, 'message' => 'Aset Tidak Ditemukan!'], 404);
         }
 
         // Tentukan Menu apa yang boleh muncul di HP berdasarkan Kategori & Status
@@ -55,7 +55,7 @@ class ScannerController extends Controller
             $actions[] = 'check_in'; // Menu "Kembalikan"
         }
         
-        $actions[] = 'report_issue'; // Menu Lapor Rusak (Selalu ada)
+        $actions[] = 'report_issue'; 
 
         return response()->json([
             'success' => true,
@@ -74,7 +74,7 @@ class ScannerController extends Controller
         ]);
 
         if (!$request->verified_by_scan) {
-            return response()->json(['message' => 'Wajib scan QR Code di lokasi!'], 403);
+            return response()->json(['message' => 'Wajib Scan QR Code Di Lokasi!'], 403);
         }
 
         $asset = Asset::where('asset_tag', $request->asset_tag)->firstOrFail();
@@ -90,7 +90,7 @@ class ScannerController extends Controller
             $asset->update(['status' => 'maintenance']);
             $message = 'Aset masuk maintenance.';
         } else {
-            return response()->json(['message' => 'Aksi tidak dikenal'], 400);
+            return response()->json(['message' => 'Aksi Tidak Diketahui'], 400);
         }
 
         return response()->json(['success' => true, 'message' => $message]);

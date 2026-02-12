@@ -20,7 +20,7 @@
     <div id="page-login" class="p-8 flex flex-col justify-center h-screen">
         <div class="text-center mb-8">
             <h1 class="text-3xl font-bold text-blue-700">VODECO</h1>
-            <p class="text-gray-500">Asset Tracking System</p>
+            <p class="text-gray-500">Asset Tracker</p>
         </div>
         
         <div id="login-error" class="bg-red-100 text-red-700 p-3 rounded mb-4 hidden"></div>
@@ -29,7 +29,7 @@
         <input type="password" id="password" placeholder="Password" class="w-full p-3 border rounded mb-6">
         
         <button onclick="doLogin()" class="w-full bg-blue-600 text-white p-3 rounded-lg font-bold hover:bg-blue-700 transition">
-            MASUK
+            SIGN IN
         </button>
     </div>
 
