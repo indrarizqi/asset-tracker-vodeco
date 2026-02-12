@@ -48,5 +48,35 @@ class AssetSeeder extends Seeder
             'status' => 'available',
             'condition' => 'Baik',
         ]);
+
+        Asset::create([
+            'asset_tag' => 'SM-26-002',
+            'name' => 'Proyektor Infocus X1',
+            'person_in_charge' => null,
+            'purchase_date' => '2024-01-01',
+            'category' => 'Semi-mobile',
+            'status' => 'unrepairable', 
+            'condition' => 'Rusak',     
+        ]);
+
+        Asset::create([
+            'asset_tag' => 'SM-26-003',
+            'name' => 'Meja Infocus X1',
+            'person_in_charge' => null,
+            'purchase_date' => '2024-01-01',
+            'category' => 'Semi-mobile',
+            'status' => 'unrepairable', 
+            'condition' => 'Rusak Total', 
+        ]);
+
+        Asset::create([
+            'asset_tag' => 'SM-26-004',
+            'name' => 'Monitor BenQ 27"',
+            'person_in_charge' => 'Bang Alam',
+            'purchase_date' => '2026-02-06',
+            'category' => 'Semi-mobile',
+            'status' => 'maintenance', 
+            'condition' => 'Rusak',    
+        ]);
     }
 }

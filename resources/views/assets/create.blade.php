@@ -1,5 +1,5 @@
 <x-app-layout>
-    <x-slot name="title">New Asset</x-slot>
+    <x-slot name="title">Create Asset</x-slot>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
             {{ __('Tambah Aset Baru') }}
@@ -47,6 +47,7 @@
 
                         <div class="mb-6">
                             <label class="block text-gray-700 text-sm font-bold mb-2">Penanggung Jawab</label>
+                            <p class="text-gray-500 text-sm">Kosongkan saja bila tidak ada PJ</p>
                             <input type="text" name="person_in_charge" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="GA Staff / Bang Alam">
                         </div>
 

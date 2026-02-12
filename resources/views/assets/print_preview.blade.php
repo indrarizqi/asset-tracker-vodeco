@@ -19,7 +19,7 @@
                 
                 <div class="mb-6 border-b pb-4">
                     <h3 class="text-lg font-bold text-gray-800">Pilih Aset untuk Dicetak</h3>
-                    <p class="text-gray-500 text-sm">Gunakan kolom pencarian untuk menyaring data, lalu centang aset yang ingin Anda cetak labelnya.</p>
+                    <p class="text-gray-500 text-sm">Gunakan kolom pencarian untuk menyaring data, lalu centang aset yang ingin Anda cetak labelnya</p>
                 </div>
 
                 <form action="{{ route('assets.pdf') }}" method="GET" target="_blank" id="printForm">
