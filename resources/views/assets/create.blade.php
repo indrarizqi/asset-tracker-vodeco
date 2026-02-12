@@ -47,8 +47,7 @@
 
                         <div class="mb-6">
                             <label class="block text-gray-700 text-sm font-bold mb-2">Penanggung Jawab</label>
-                            <p class="text-gray-500 text-sm">Kosongkan saja bila tidak ada PJ</p>
-                            <input type="text" name="person_in_charge" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="GA Staff / Bang Alam">
+                            <input type="text" name="person_in_charge" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Kosongkan jika tidak ada">
                         </div>
 
                         <div class="flex items-center justify-between mt-6">
