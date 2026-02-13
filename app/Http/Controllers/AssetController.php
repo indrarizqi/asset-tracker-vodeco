@@ -21,6 +21,7 @@ class AssetController extends Controller
             'name' => 'required',
             'category' => 'required|in:mobile,semi-mobile,fixed',
             'description' => 'required',
+            'status' => 'required|in:in_use,maintenance,broken,not_used',
         ]);
 
         $prefix = match($request->category) {
@@ -30,23 +31,19 @@ class AssetController extends Controller
         };
         $year = date('y');
         
-        // Auto-Numbering
         $lastAsset = Asset::where('asset_tag', 'LIKE', "$prefix-$year-%")
                         ->orderBy('id', 'desc')->first();       
         $sequence = $lastAsset ? intval(substr($lastAsset->asset_tag, -3)) + 1 : 1;
         $newTag = sprintf("%s-%s-%03d", $prefix, $year, $sequence);
         
-
-        // Jika PJ diisi -> Status 'in_use'. Jika kosong -> 'available'
-        $status = $request->filled('person_in_charge') ? 'in_use' : 'available';
+        $status = $request->status;
 
         Asset::create([
             'name' => $request->name,
             'category' => $request->category,
             'asset_tag' => $newTag,
-            'status' => $status, // Gunakan variabel status dinamis di atas
+            'status' => $status,
             
-            // Data Tambahan
             'purchase_date' => $request->purchase_date,
             'condition' => $request->condition,
             'person_in_charge' => $request->person_in_charge,
@@ -66,8 +63,9 @@ class AssetController extends Controller
     {
         $request->validate([
             'name' => 'required',
-            'status' => 'required',
+            'category' => 'required|in:mobile,semi-mobile,fixed',
             'description' => 'required',
+            'status' => 'required|in:in_use,maintenance,broken,not_used',
         ]);
 
         $asset = Asset::findOrFail($id);

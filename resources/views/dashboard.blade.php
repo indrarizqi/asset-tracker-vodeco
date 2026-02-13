@@ -90,10 +90,10 @@
                                     @php
                                         $statusKey = strtolower(str_replace(' ', '_', $asset->status));
                                         $colorClass = 'bg-gray-100 text-gray-700'; 
-                                        if (str_contains($statusKey, 'available')) { $colorClass = 'bg-green-100 text-green-700 border border-green-200'; } 
-                                        elseif (str_contains($statusKey, 'use')) { $colorClass = 'bg-blue-100 text-blue-700 border border-blue-200'; } 
-                                        elseif (str_contains($statusKey, 'maintenance')) { $colorClass = 'bg-yellow-100 text-yellow-700 border border-yellow-200'; } 
-                                        elseif (str_contains($statusKey, 'unrepairable') || str_contains($statusKey, 'rusak')) { $colorClass = 'bg-red-100 text-red-700 border border-red-200'; }
+                                        if (str_contains($statusKey, 'in_use')) { $colorClass = 'bg-green-100 text-green-700 border border-green-200'; } 
+                                        elseif (str_contains($statusKey, 'maintenance')) { $colorClass = 'bg-blue-100 text-blue-700 border border-blue-200'; } 
+                                        elseif (str_contains($statusKey, 'not_used')) { $colorClass = 'bg-yellow-100 text-yellow-700 border border-yellow-200'; } 
+                                        elseif (str_contains($statusKey, 'unrepairable') || str_contains($statusKey, 'broken')) { $colorClass = 'bg-red-100 text-red-700 border border-red-200'; }
                                     @endphp
                                     <span class="inline-block px-3 py-1 text-[10px] font-extrabold uppercase tracking-wider rounded-full {{ $colorClass }}">
                                         {{ str_replace('_', ' ', $asset->status) }}

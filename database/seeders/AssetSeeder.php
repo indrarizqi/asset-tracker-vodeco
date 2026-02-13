@@ -15,7 +15,7 @@ class AssetSeeder extends Seeder
             'person_in_charge' => null,
             'purchase_date' => '2026-02-06',
             'category' => 'Mobile',
-            'status' => 'available',
+            'status' => 'in_use',
             'condition' => 'Baik',
             'description' => 'masih berfungsi',
         ]);
@@ -26,7 +26,7 @@ class AssetSeeder extends Seeder
             'person_in_charge' => 'Bang Alam',
             'purchase_date' => '2026-02-06',
             'category' => 'Mobile',
-            'status' => 'maintenance',
+            'status' => 'broken',
             'condition' => 'Rusak Berat',
             'description' => 'layar patah',
         ]);
@@ -37,7 +37,18 @@ class AssetSeeder extends Seeder
             'person_in_charge' => 'Bang Alam',
             'purchase_date' => '2026-02-07',
             'category' => 'Mobile',
-            'status' => 'in_use',
+            'status' => 'maintenance',
+            'condition' => 'Rusak Ringan',
+            'description' => 'casan hilang'
+        ]);
+
+        Asset::create([
+            'asset_tag' => 'M-26-004',
+            'name' => 'Keyboard Logitech B100',
+            'person_in_charge' => 'Bang Alam',
+            'purchase_date' => '2026-02-07',
+            'category' => 'Mobile',
+            'status' => 'not_used',
             'condition' => 'Rusak Ringan',
             'description' => 'casan hilang'
         ]);

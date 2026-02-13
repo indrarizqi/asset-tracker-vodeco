@@ -36,8 +36,20 @@
                             </div>
 
                             <div>
+                                <label for="status">Status</label>
+                                <select name="status" class="shadow border rounded w-full py-2 px-3 border-gray-300 text-gray-700 leading-tight focus:outline-none focus:shadow-outline cursor-pointer" required>
+                                    <option value="" disabled selected>Pilih Status</option>
+                                    <option value="in_use">In Use</option>
+                                    <option value="broken">Broken</option>
+                                    <option value="maintenance">Maintenance</option>
+                                    <option value="not_used">Not Used</option>
+                                </select>
+                            </div>
+
+                            <div>
                                 <label class="block text-gray-700 text-sm font-bold mb-2">Kondisi Awal</label>
                                 <select name="condition" class="shadow border rounded w-full py-2 px-3 border-gray-300 text-gray-700 leading-tight focus:outline-none focus:shadow-outline cursor-pointer" required>
+                                    <option value="" disabled selected>Pilih Kondisi</option>
                                     <option value="Baik">Baik</option>
                                     <option value="Rusak Ringan">Rusak Ringan</option>
                                     <option value="Rusak Berat">Rusak Berat</option>
