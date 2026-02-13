@@ -10,20 +10,19 @@ use Illuminate\Validation\Rules;
 
 class UserController extends Controller
 {
-    // 1. Tampilkan Daftar User
+
     public function index()
     {
         $users = User::all();
         return view('users.index', compact('users'));
     }
 
-    // 2. Form Tambah User
     public function create()
     {
         return view('users.create');
     }
 
-    // 3. Simpan User Baru
+    // Simpan User Baru
     public function store(Request $request)
     {
         $request->validate([
@@ -43,13 +42,13 @@ class UserController extends Controller
         return redirect()->route('users.index')->with('success', 'User berhasil ditambahkan!');
     }
 
-    // 4. Form Edit User
+    // Edit User
     public function edit(User $user)
     {
         return view('users.edit', compact('user'));
     }
 
-    // 5. Update User
+    // Update User
     public function update(Request $request, User $user)
     {
         $request->validate([
@@ -81,7 +80,7 @@ class UserController extends Controller
         return redirect()->route('users.index')->with('success', 'Data user diperbarui!');
     }
 
-    // 6. Hapus User
+    // Hapus User
     public function destroy(User $user)
     {
         

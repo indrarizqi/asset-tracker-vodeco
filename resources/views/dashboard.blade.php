@@ -6,8 +6,6 @@
         </h2>
     </x-slot>
 
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
 
@@ -24,7 +22,8 @@
 
                 <div class="flex gap-3 w-full sm:w-auto justify-end">
                     <a href="{{ route('assets.create') }}" class="inline-flex items-center px-4 py-2 bg-blue-600 border border-transparent rounded-lg font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700 active:bg-blue-900 focus:outline-none focus:border-blue-900 focus:ring ring-blue-300 disabled:opacity-25 transition ease-in-out duration-150 shadow-md">
-                        + Add New
+                        <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                        Add New
                     </a>
                     <a href="{{ route('report.assets') }}" target="_blank" class="inline-flex items-center px-4 py-2 bg-purple-600 border border-transparent rounded-lg font-semibold text-xs text-white uppercase tracking-widest hover:bg-purple-700 active:bg-purple-900 focus:outline-none focus:border-purple-900 focus:ring ring-purple-300 disabled:opacity-25 transition ease-in-out duration-150 shadow-md">
                         <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
@@ -133,76 +132,4 @@
         </div>
 
     </div>
-
-    <input type="hidden" id="flash-success" value="{{ session('success') }}">
-    <input type="hidden" id="flash-error" value="{{ session('error') }}">
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            
-            // Ambil data dari elemen rahasia di atas
-            const successInput = document.getElementById('flash-success');
-            const errorInput = document.getElementById('flash-error');
-            
-            const successMessage = successInput ? successInput.value : '';
-            const errorMessage = errorInput ? errorInput.value : '';
-
-            // LOGIC POPUP SUKSES
-            if (successMessage) {
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Berhasil!',
-                    text: successMessage,
-                    timer: 3000,
-                    showConfirmButton: false,
-                    toast: true,
-                    position: 'top',
-                    background: '#fff',
-                    iconColor: '#10b981', 
-                    customClass: {
-                        popup: 'rounded-xl shadow-xl border border-gray-100'
-                    }
-                });
-            }
-
-            // LOGIC POPUP ERROR
-            if (errorMessage) {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Gagal Memuat!',
-                    text: errorMessage,
-                });
-            }
-
-            // LOGIC KONFIRMASI DELETE
-            const deleteForms = document.querySelectorAll('.form-delete');
-            deleteForms.forEach(form => {
-                form.addEventListener('submit', function (e) {
-                    e.preventDefault(); // Cegah submit langsung
-                    
-                    Swal.fire({
-                        title: 'Konfirmasi Hapus',
-                        text: "Data aset ini akan dihapus secara permanen!",
-                        icon: 'warning',
-                        showCancelButton: true,
-                        confirmButtonColor: '#ef4444', 
-                        cancelButtonColor: '#6b7280', 
-                        confirmButtonText: 'Hapus',
-                        cancelButtonText: 'Batal',
-                        reverseButtons: true, 
-                        background: '#fff',
-                        customClass: {
-                            popup: 'rounded-xl shadow-xl border border-gray-100',
-                            confirmButton: 'px-6 py-2.5 rounded-lg font-bold shadow-lg',
-                            cancelButton: 'px-6 py-2.5 rounded-lg font-bold'
-                        }
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            form.submit();
-                        }
-                    });
-                });
-            });
-        });
-    </script>
 </x-app-layout>

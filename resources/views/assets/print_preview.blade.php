@@ -45,7 +45,7 @@
                 <div class="overflow-x-auto">
                     <table class="min-w-full text-left border-collapse">
                         <thead>
-                            <tr class="text-gray-400 text-[11px] font-bold uppercase tracking-wider border-b border-gray-100">
+                            <tr class="bg-gray-50/80 text-gray-500 text-[11px] font-extrabold uppercase tracking-wider">
                                 <th class="px-6 py-4 text-center w-16">No</th>
                                 
                                 <th class="px-6 py-4">Asset ID</th>
@@ -191,8 +191,19 @@
                     btnPrint.classList.add('opacity-50', 'cursor-not-allowed');
                 }
 
+                // LOGIC GANTI WARNA TOMBOL SELECT/DESELECT
                 const allCheckedNow = checkboxes.length > 0 && Array.from(checkboxes).every(cb => cb.checked);
                 btnSelectAll.textContent = allCheckedNow ? "Deselect All" : "Select All";
+
+                if (allCheckedNow) {
+                    // JIKA DESELECT ALL
+                    btnSelectAll.classList.remove('bg-transparent', 'text-blue-600', 'hover:bg-blue-600', 'hover:text-white');
+                    btnSelectAll.classList.add('bg-blue-600', 'text-white', 'hover:bg-blue-700');
+                } else {
+                    // JIKA SELECT ALL
+                    btnSelectAll.classList.add('bg-transparent', 'text-blue-600', 'hover:bg-blue-600', 'hover:text-white');
+                    btnSelectAll.classList.remove('bg-blue-600', 'text-white', 'hover:bg-blue-700');
+                }
             }
 
             window.printSelected = function() {

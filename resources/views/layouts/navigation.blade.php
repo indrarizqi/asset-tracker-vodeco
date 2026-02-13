@@ -54,12 +54,9 @@
                             <div class="border-t border-gray-100"></div>
                         @endif
 
-                        <form method="POST" action="{{ route('logout') }}">
-                            @csrf
-
+                        <form method="POST" action="{{ route('logout') }}" class="form-logout"> @csrf
                             <x-dropdown-link :href="route('logout')"
-                                    onclick="event.preventDefault();
-                                                this.closest('form').submit();">
+                                    onclick="event.preventDefault(); this.closest('form').requestSubmit();" class="text-red-600"> 
                                 {{ __('Sign Out') }}
                             </x-dropdown-link>
                         </form>
@@ -125,11 +122,13 @@
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
 
-                    <x-responsive-nav-link :href="route('logout')"
-                            onclick="event.preventDefault();
-                                        this.closest('form').submit();">
-                        {{ __('Sign Out') }}
-                    </x-responsive-nav-link>
+                    <form method="POST" action="{{ route('logout') }}" class="form-logout">
+                        @csrf
+                        <x-responsive-nav-link :href="route('logout')"
+                                onclick="event.preventDefault(); this.closest('form').requestSubmit();" class="text-red-600">
+                            {{ __('Sign Out') }}
+                        </x-responsive-nav-link>
+                    </form>
                 </form>
             </div>
         </div>
