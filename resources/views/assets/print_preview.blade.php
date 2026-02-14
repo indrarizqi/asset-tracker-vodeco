@@ -97,12 +97,14 @@
                                         $statusKey = strtolower(str_replace(' ', '_', $asset->status));
                                         $statusClass = 'bg-gray-100 text-gray-600'; // Default
                                         
-                                        if (str_contains($statusKey, 'available')) {
+                                        if (str_contains($statusKey, 'in_use')) {
                                             $statusClass = 'bg-green-50 text-green-600 border border-green-100';
                                         } elseif (str_contains($statusKey, 'maintenance')) {
-                                            $statusClass = 'bg-yellow-50 text-yellow-600 border border-yellow-100';
-                                        } elseif (str_contains($statusKey, 'use')) {
                                             $statusClass = 'bg-blue-50 text-blue-600 border border-blue-100';
+                                        } elseif (str_contains($statusKey, 'broken')) {
+                                            $statusClass = 'bg-red-50 text-red-600 border border-red-100';
+                                        } elseif (str_contains($statusKey, 'not_used')) {
+                                            $statusClass = 'bg-yellow-50 text-yellow-600 border border-yellow-100';
                                         }
                                     @endphp
                                     <span class="px-3 py-1 inline-flex text-[10px] leading-5 font-bold rounded-full uppercase {{ $statusClass }}">
