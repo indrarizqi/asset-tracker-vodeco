@@ -37,7 +37,8 @@
 
         <script>
             document.addEventListener('DOMContentLoaded', function () {
-                // A. NOTIFIKASI TOAST (Login, Create, Update)
+                
+                // 1. NOTIFIKASI TOAST (Login, Create, Update)
                 const successMsg = document.getElementById('global-flash-success').value;
                 const errorMsg = document.getElementById('global-flash-error').value;
 
@@ -64,14 +65,16 @@
                     });
                 }
 
-                // B. KONFIRMASI LOGOUT
-                const logoutForms = document.querySelectorAll('.form-logout');
-                logoutForms.forEach(form => {
-                    form.addEventListener('submit', function (e) {
+                // 2. KONFIRMASI LOGOUT (Event Delegation)
+                document.addEventListener('submit', function(e) {
+                    // Cek apakah form yang disubmit memiliki class 'form-logout'
+                    if (e.target && e.target.classList.contains('form-logout')) {
                         e.preventDefault();
+                        const form = e.target;
+                        
                         Swal.fire({
-                            title: 'Konfirmasi Logout',
-                            text: "Pastikan Aktivitas Anda Sudah Disimpan",
+                            title: 'Konfirmasi Sign Out',
+                            text: "Pastikan data Anda sudah tersimpan!",
                             icon: 'question',
                             showCancelButton: true,
                             confirmButtonColor: '#ef4444', 
@@ -86,18 +89,16 @@
                                 cancelButton: 'px-6 py-2.5 rounded-lg font-bold'
                             }
                         }).then((result) => {
-                            if (result.isConfirmed) {
-                                form.submit();
-                            }
+                            if (result.isConfirmed) form.submit();
                         });
-                    });
-                });
+                    }
 
-                // 3. KONFIRMASI DELETE
-                const deleteForms = document.querySelectorAll('.form-delete');
-                deleteForms.forEach(form => {
-                    form.addEventListener('submit', function (e) {
+                    // 3. KONFIRMASI DELETE (Event Delegation - SUPPORT AJAX)
+                    // Ini akan menangkap semua form delete, baik yang lama maupun hasil Live Search
+                    if (e.target && e.target.classList.contains('form-delete')) {
                         e.preventDefault();
+                        const form = e.target;
+
                         Swal.fire({
                             title: 'Konfirmasi Hapus',
                             text: "Data ini akan dihapus secara permanen!",
@@ -117,8 +118,9 @@
                         }).then((result) => {
                             if (result.isConfirmed) form.submit();
                         });
-                    });
+                    }
                 });
+
             });
         </script>
     </body>

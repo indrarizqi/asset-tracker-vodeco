@@ -106,21 +106,26 @@ class AssetController extends Controller
     // Preview & Cetak Label
     public function printPreview(Request $request)
     {
-        // 1. Ambil kata kunci pencarian dari URL
-        $search = $request->input('search');
+        $query = Asset::query();
 
-        // 2. Query Data dengan Pagination
-        $assets = Asset::query()
-            ->when($search, function ($query, $search) {
-                return $query->where('name', 'like', "%{$search}%")
-                            ->orWhere('asset_tag', 'like', "%{$search}%")
-                            ->orWhere('category', 'like', "%{$search}%");
-            })
-            ->latest()      
-            ->paginate(10)  // Max Paginate 10
-            ->withQueryString(); 
+        // 1. Logic Search
+        if ($request->has('search') && $request->search != '') {
+            $search = $request->search;
+            $query->where(function($q) use ($search) {
+                $q->where('name', 'like', '%' . $search . '%')
+                ->orWhere('asset_tag', 'like', '%' . $search . '%')
+                ->orWhere('category', 'like', '%' . $search . '%');
+            });
+        }
 
-        // 3. Kirim ke View 'assets.print'
+        $assets = $query->latest()->paginate(10)->withQueryString();
+
+        // 2. JIKA AJAX (Live Search), RETURN PARTIAL VIEW
+        if ($request->ajax()) {
+            return view('assets.partials.print-table', compact('assets'))->render();
+        }
+
+        // 3. JIKA BIASA, RETURN FULL PAGE
         return view('assets.print_preview', compact('assets'));
     }
 
@@ -163,23 +168,30 @@ class AssetController extends Controller
     // 1. DASHBOARD: Pagination + Search
     public function index(Request $request)
     {
-        $search = $request->input('search');
+        $query = Asset::query();
 
-        $assets = Asset::query()
-            ->when($search, function ($query, $search) {
-                return $query->where('name', 'like', "%{$search}%")
-                            ->orWhere('asset_tag', 'like', "%{$search}%")
-                            ->orWhere('category', 'like', "%{$search}%")
-                            ->orWhere('status', 'like', "%{$search}%");
-            })
-            ->latest()
-            ->paginate(10)
-            ->withQueryString(); 
+        // Optimasi Query Search
+        if ($request->has('search') && $request->search != '') {
+            $search = $request->search;
+            $query->where(function($q) use ($search) {
+                $q->where('name', 'like', '%' . $search . '%')
+                ->orWhere('asset_tag', 'like', '%' . $search . '%')
+                ->orWhere('category', 'like', '%' . $search . '%');
+            });
+        }
 
+        $assets = $query->latest()->paginate(10)->withQueryString();
+
+        // Jika request datang dari AJAX, kembalikan hanya bagian tabelnya saja
+        if ($request->ajax()) {
+            return view('assets.partials.table', compact('assets'))->render();
+        }
+
+        // Jika request biasa, kembalikan halaman dashboard utuh
         return view('dashboard', compact('assets'));
     }
 
-    // Method untuk Halaman Menu "Print QR Code"
+    // Method Selection untuk Menu "Print QR Code"
     public function print_selection(Request $request)
     {
         $search = $request->input('search');
