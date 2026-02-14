@@ -44,7 +44,7 @@
                     <div class="mb-4">
                         <label class="block text-gray-700 font-bold mb-2">Status</label>
                         <select name="status" class="w-full border rounded border-gray-300 py-2 px-3 text-gray-700 cursor-pointer">
-                            <option value="available" {{ $asset->status == 'available' ? 'selected' : '' }}>Available</option>
+                            <option value="not_used" {{ $asset->status == 'not_used' ? 'selected' : '' }}>Not Used</option>
                             <option value="in_use" {{ $asset->status == 'in_use' ? 'selected' : '' }}>In Use</option>
                             <option value="maintenance" {{ $asset->status == 'maintenance' ? 'selected' : '' }}>Maintenance</option>
                             <option value="broken" {{ $asset->status == 'broken' ? 'selected' : '' }}>Broken</option>
