@@ -23,6 +23,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/assets/download-pdf', [AssetController::class, 'downloadPdf'])->name('assets.pdf');
     Route::get('/assets/{id}/edit', [AssetController::class, 'edit'])->name('assets.edit');
     Route::put('/assets/{id}', [AssetController::class, 'update'])->name('assets.update');
+    
+    // API: Get all asset IDs (untuk select all across pages)
+    Route::get('/api/assets/all-ids', [AssetController::class, 'getAllAssetIds'])->name('assets.all-ids');
 
     // Khusus Super Admin
     Route::middleware(['role:super_admin'])->group(function () {

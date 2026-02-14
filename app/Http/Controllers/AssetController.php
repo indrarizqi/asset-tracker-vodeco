@@ -208,4 +208,32 @@ class AssetController extends Controller
 
         return view('assets.print', compact('assets'));
     }
+
+    /**
+     * API: Mengambil semua ID aset tanpa pagination
+     * Mendukung filter search untuk konsistensi dengan printPreview
+     */
+    public function getAllAssetIds(Request $request)
+    {
+        $query = Asset::query();
+
+        // Terapkan filter search yang sama dengan printPreview
+        if ($request->has('search') && $request->search != '') {
+            $search = $request->search;
+            $query->where(function($q) use ($search) {
+                $q->where('name', 'like', '%' . $search . '%')
+                  ->orWhere('asset_tag', 'like', '%' . $search . '%')
+                  ->orWhere('category', 'like', '%' . $search . '%');
+            });
+        }
+
+        // Ambil hanya kolom id untuk efisiensi
+        $assetIds = $query->pluck('id')->toArray();
+
+        return response()->json([
+            'success' => true,
+            'total' => count($assetIds),
+            'ids' => $assetIds
+        ]);
+    }
 }

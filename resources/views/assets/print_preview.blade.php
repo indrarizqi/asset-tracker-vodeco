@@ -124,23 +124,85 @@
             // === 5. SELECT ALL BUTTON ===
             btnSelectAll.addEventListener('click', function() {
                 const checkboxes = document.querySelectorAll('.asset-checkbox');
-                const allCheckedOnPage = Array.from(checkboxes).every(cb => cb.checked);
+                const currentPageIds = Array.from(checkboxes).map(cb => cb.value);
+                const allCheckedOnPage = currentPageIds.every(id => selectedAssets.includes(id));
                 
-                if (allCheckedOnPage) {
+                if (allCheckedOnPage && selectedAssets.length > currentPageIds.length) {
+                    // Jika sudah select all (across pages), maka unselect all
+                    selectedAssets = [];
+                    checkboxes.forEach(cb => cb.checked = false);
+                    saveAndRefresh();
+                } else if (allCheckedOnPage) {
+                    // Jika hanya current page yang tercentang, uncheck current page
                     checkboxes.forEach(cb => {
                         cb.checked = false;
                         selectedAssets = selectedAssets.filter(id => id !== cb.value);
                     });
+                    saveAndRefresh();
                 } else {
-                    checkboxes.forEach(cb => {
-                        if (!cb.checked) {
-                            cb.checked = true;
-                            if (!selectedAssets.includes(cb.value)) selectedAssets.push(cb.value);
-                        }
-                    });
+                    // Jika belum semua tercentang, panggil API untuk select all across pages
+                    selectAllAcrossPages();
                 }
-                saveAndRefresh();
             });
+
+            // Fungsi untuk select all across pages
+            function selectAllAcrossPages() {
+                // Tampilkan loading state
+                btnSelectAll.disabled = true;
+                btnSelectAll.textContent = 'Loading...';
+                
+                // Ambil parameter search saat ini
+                const searchParam = searchInput.value ? `?search=${encodeURIComponent(searchInput.value)}` : '';
+                const apiUrl = "{{ route('assets.all-ids') }}" + searchParam;
+                
+                fetch(apiUrl, {
+                    headers: { 
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'Accept': 'application/json'
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Simpan semua ID ke selectedAssets
+                        selectedAssets = data.ids.map(id => String(id));
+                        
+                        // Centang semua checkbox di halaman saat ini
+                        const checkboxes = document.querySelectorAll('.asset-checkbox');
+                        checkboxes.forEach(cb => {
+                            if (selectedAssets.includes(cb.value)) {
+                                cb.checked = true;
+                            }
+                        });
+                        
+                        saveAndRefresh();
+                        
+                        // Tampilkan notifikasi
+                        if (data.total > 0) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Berhasil!',
+                                text: `${data.total} aset dipilih dari semua halaman`,
+                                timer: 2000,
+                                showConfirmButton: false
+                            });
+                        }
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Gagal!',
+                        text: 'Terjadi kesalahan saat memuat data',
+                        timer: 2000,
+                        showConfirmButton: false
+                    });
+                })
+                .finally(() => {
+                    btnSelectAll.disabled = false;
+                });
+            }
 
             function saveAndRefresh() {
                 localStorage.setItem('selectedAssets', JSON.stringify(selectedAssets));
@@ -150,15 +212,25 @@
 
             function updateSelectAllButtonState() {
                 const checkboxes = document.querySelectorAll('.asset-checkbox');
-                if (checkboxes.length === 0) return;
-                const allCheckedOnPage = Array.from(checkboxes).every(cb => cb.checked);
+                if (checkboxes.length === 0) {
+                    btnSelectAll.textContent = "Select All";
+                    btnSelectAll.className = "inline-flex items-center px-4 py-2 bg-white border border-gray-300 rounded-lg font-semibold text-xs text-gray-700 uppercase tracking-widest shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-25 transition ease-in-out duration-150";
+                    return;
+                }
                 
-                btnSelectAll.textContent = allCheckedOnPage ? "Deselect All" : "Select All";
+                const currentPageIds = Array.from(checkboxes).map(cb => cb.value);
+                const allCheckedOnPage = currentPageIds.every(id => selectedAssets.includes(id));
+                const hasMoreSelected = selectedAssets.length > currentPageIds.length;
                 
-                // Logic ganti warna (Outline vs Solid Blue)
-                if (allCheckedOnPage) {
+                // Update teks dan style button
+                if (allCheckedOnPage && hasMoreSelected) {
+                    btnSelectAll.textContent = `Deselect All (${selectedAssets.length})`;
+                    btnSelectAll.className = "inline-flex items-center px-4 py-2 bg-purple-600 border border-transparent rounded-lg font-semibold text-xs text-white uppercase tracking-widest hover:bg-purple-700 active:bg-purple-900 focus:outline-none focus:border-purple-900 focus:ring ring-purple-300 transition ease-in-out duration-150 shadow-md";
+                } else if (allCheckedOnPage) {
+                    btnSelectAll.textContent = "Deselect All";
                     btnSelectAll.className = "inline-flex items-center px-4 py-2 bg-blue-600 border border-transparent rounded-lg font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700 active:bg-blue-900 focus:outline-none focus:border-blue-900 focus:ring ring-blue-300 transition ease-in-out duration-150 shadow-md";
                 } else {
+                    btnSelectAll.textContent = "Select All";
                     btnSelectAll.className = "inline-flex items-center px-4 py-2 bg-white border border-gray-300 rounded-lg font-semibold text-xs text-gray-700 uppercase tracking-widest shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-25 transition ease-in-out duration-150";
                 }
             }
