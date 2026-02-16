@@ -224,7 +224,7 @@
                 
                 // Update teks dan style button
                 if (allCheckedOnPage && hasMoreSelected) {
-                    btnSelectAll.textContent = `Deselect All (${selectedAssets.length})`;
+                    btnSelectAll.textContent = `Deselect All`;
                     btnSelectAll.className = "inline-flex items-center px-4 py-2 bg-purple-600  rounded-lg font-semibold text-xs text-white uppercase tracking-widest hover:bg-purple-700 active:bg-purple-900 focus:outline-none focus:border-purple-900 focus:ring ring-purple-300 transition ease-in-out duration-150 shadow-md";
                 } else if (allCheckedOnPage) {
                     btnSelectAll.textContent = "Deselect All";

@@ -67,7 +67,7 @@
                 month: 'short', 
                 year: 'numeric' 
             };
-            const dateString = now.toLocaleDateString('en-GB', dateOptions);
+            const dateString = now.toLocaleDateString('id-GB', dateOptions);
 
             // Time Format
             const timeOptions = { 
@@ -95,7 +95,7 @@
                 // 1. GLOBAL TOAST MIXIN (Konfigurasi Animasi Toast)
                 const Toast = Swal.mixin({
                     toast: true,
-                    position: 'top-end',
+                    position: 'top',
                     showConfirmButton: false,
                     timer: 3000,
                     timerProgressBar: true,

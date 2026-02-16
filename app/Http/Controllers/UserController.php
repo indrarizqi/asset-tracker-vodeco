@@ -83,12 +83,21 @@ class UserController extends Controller
     // Hapus User
     public function destroy(User $user)
     {
-        
-    if (Auth::id() == $user->id) {
-        return back()->with('error', 'Anda tidak bisa menghapus akun Super Admin utama!');
-    }
+        // Super Admin tidak boleh menghapus diri sendiri
+        if (Auth::id() == $user->id) {
+            return back()->with('error', 'Anda tidak bisa menghapus akun Super Admin!');
+        }
 
-    $user->delete();
-    return redirect()->route('users.index')->with('success', 'User berhasil dihapus.');
+        // Jika yang dihapus Super Admin, pastikan bukan yang terakhir
+        if ($user->role === 'super_admin') {
+            $superAdminCount = User::where('role', 'super_admin')->count();
+            if ($superAdminCount <= 1) {
+                return back()->with('error', 'Tidak dapat menghapus Super Admin terakhir. Sistem harus memiliki minimal satu Super Admin!');
+            }
+        }
+
+        $user->delete();
+
+        return back()->with('success', 'User berhasil dihapus.');
     }
 }
